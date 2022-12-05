@@ -2,7 +2,7 @@ import 'package:pokedex_app/data/model/pokemon.dart';
 import 'package:pokedex_app/data/network/api_service.dart';
 
 abstract class PokemonRepository {
-  Future<List<Pokemon>> getPokemons();
+  Future<List<Pokemon>> getPokemons(int offset, int limit);
 }
 
 class DefaultPokemonRepository implements PokemonRepository {
@@ -12,8 +12,8 @@ class DefaultPokemonRepository implements PokemonRepository {
       : _apiService = apiService;
 
   @override
-  Future<List<Pokemon>> getPokemons() async {
-    final data = await _apiService.getPokemons();
+  Future<List<Pokemon>> getPokemons(int offset, int limit) async {
+    final data = await _apiService.getPokemons(offset, limit);
     final pokemonList = data.results;
 
     final List<Pokemon> newPokemonList = [];

@@ -17,17 +17,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
+  static const List<Widget> _pages = [
+    PokemonListPage(),
+    MovesListPage(),
+    ItemsListPage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: IndexedStack(
-          index: _currentIndex,
-          children: const [
-            PokemonListPage(),
-            MovesListPage(),
-            ItemsListPage(),
-          ],
+        child: Center(
+          child: _pages.elementAt(_currentIndex),
         ),
       ),
       bottomNavigationBar: Container(

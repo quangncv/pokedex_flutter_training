@@ -1,11 +1,12 @@
-import 'package:dio/dio.dart';
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/common/constants.dart';
-import 'package:pokedex_app/data/model/page_response.dart';
 import 'package:pokedex_app/data/model/pokemon.dart';
-import 'package:pokedex_app/data/network/api_service.dart';
 import 'package:pokedex_app/data/repositories/pokemon_repository.dart';
 import 'package:pokedex_app/di/injection.dart';
+import 'package:pokedex_app/extensions/string_ext.dart';
 import 'package:pokedex_app/pages/pokemon_detail/pokemon_detail_page.dart';
 import 'package:pokedex_app/utils/theme.dart';
 import 'package:pokedex_app/widgets/appbar_search_widget.dart';
@@ -22,6 +23,69 @@ class PokemonListPage extends StatefulWidget {
 class _PokemonListPageState extends State<PokemonListPage> {
   final repository = getIt.get<PokemonRepository>();
 
+  int offset = 0;
+  final int limit = 20;
+  bool hasNextPage = true;
+  bool isFirstLoadRunning = false;
+  bool isLoadMoreRunning = false;
+
+  final List<Pokemon> pokemonList = [];
+
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstLoad();
+    _scrollController = ScrollController()
+      ..addListener(() {
+        _loadMore();
+      });
+  }
+
+  void _firstLoad() async {
+    setState(() {
+      isFirstLoadRunning = true;
+    });
+
+    final data = await repository.getPokemons(offset, limit);
+    if (data.isNotEmpty) {
+      setState(() {
+        pokemonList.addAll(data);
+      });
+    }
+
+    setState((){
+      isFirstLoadRunning = false;
+    });
+  }
+
+  void _loadMore() async {
+    if (hasNextPage &&
+        !isFirstLoadRunning &&
+        !isLoadMoreRunning &&
+        _scrollController.position.extentAfter < 300) {
+      setState((){
+        isLoadMoreRunning = true;
+      });
+
+      offset += limit;
+
+      final data = await repository.getPokemons(offset, limit);
+      if (data.isNotEmpty) {
+        setState((){
+          pokemonList.addAll(data);
+        });
+      } else {
+        hasNextPage = false;
+      }
+
+      setState((){
+        isLoadMoreRunning = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -29,27 +93,33 @@ class _PokemonListPageState extends State<PokemonListPage> {
         const AppBarSearchWidget(
           title: 'Pokemon',
         ),
-        Expanded(
-          child: FutureBuilder<List<Pokemon>>(
-              future: repository.getPokemons(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return ListView.builder(
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: (context, index) {
-                      final pokemon = snapshot.data?[index] ?? Pokemon();
-                      return _BuildItemPokemon(
-                        pokemon: pokemon,
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
-        )
+        if (isFirstLoadRunning)
+          const Expanded(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        else
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              controller: _scrollController,
+              itemCount: pokemonList.length,
+              itemBuilder: (context, index) {
+                final pokemon = pokemonList[index];
+                return _BuildItemPokemon(
+                  pokemon: pokemon,
+                );
+              },
+            ),
+          ),
+        if (isLoadMoreRunning == true)
+          const Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 20),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
       ],
     );
   }
@@ -65,7 +135,6 @@ class _BuildItemPokemon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final types = pokemon.types ?? [];
     final typeViews = [];
     for (var type in types) {
@@ -90,7 +159,16 @@ class _BuildItemPokemon extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Image.network('$pokemonImageUrl${pokemon.id}.png', width: 50,),
+              CachedNetworkImage(
+                imageUrl:'$pokemonImageUrl${pokemon.id}.png',
+                placeholder: (context, url) => const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                width: 50,
+              ),
               const SizedBox(
                 width: 10,
               ),
@@ -99,7 +177,7 @@ class _BuildItemPokemon extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      pokemon.name.toString(),
+                      pokemon.name.toString().capitalize(),
                       style: PrimaryFont.medium(19)
                           .copyWith(color: kColorPrimaryText),
                     ),
@@ -113,7 +191,8 @@ class _BuildItemPokemon extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: typeViews.map((e) => PokemonTypeWidget(type: e)).toList(),
+                children:
+                    typeViews.map((e) => PokemonTypeWidget(type: e)).toList(),
               ),
             ],
           ),

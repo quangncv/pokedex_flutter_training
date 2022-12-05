@@ -58,7 +58,7 @@ enum PokemonTypes {
   dragon(ImageAssets.ic_type_dragon, ImageAssets.ic_tag_dragon, kColorDragon),
   electric(ImageAssets.ic_type_electric, ImageAssets.ic_tag_electric, kColorElectric),
   fairy(ImageAssets.ic_type_fairy, ImageAssets.ic_tag_fairy, kColorFairy),
-  fight(ImageAssets.ic_type_fight, ImageAssets.ic_tag_fight, kColorFight),
+  fighting(ImageAssets.ic_type_fight, ImageAssets.ic_tag_fight, kColorFight),
   fire(ImageAssets.ic_type_fire, ImageAssets.ic_tag_fire, kColorFire),
   flying(ImageAssets.ic_type_flying, ImageAssets.ic_tag_flying, kColorFlying),
   ghost(ImageAssets.ic_type_ghost, ImageAssets.ic_tag_ghost, kColorGhost),
@@ -78,6 +78,6 @@ enum PokemonTypes {
   final Color color;
 
   static PokemonTypes getType(String type) {
-    return PokemonTypes.values.firstWhere((element) => element.name == type);
+    return type.isNotEmpty ? PokemonTypes.values.firstWhere((element) => element.name == type) : PokemonTypes.normal;
   }
 }
