@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'item.dart';
+part of 'item_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Item _$ItemFromJson(Map<String, dynamic> json) => Item(
+ItemResponse _$ItemResponseFromJson(Map<String, dynamic> json) => ItemResponse(
       attributes: (json['attributes'] as List<dynamic>?)
           ?.map((e) => Attributes.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -21,7 +21,8 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
           : Sprites.fromJson(json['sprites'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
+Map<String, dynamic> _$ItemResponseToJson(ItemResponse instance) =>
+    <String, dynamic>{
       'attributes': instance.attributes,
       'cost': instance.cost,
       'effect_entries': instance.effectEntries,

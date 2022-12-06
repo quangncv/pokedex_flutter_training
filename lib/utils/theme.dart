@@ -68,12 +68,167 @@ class PrimaryGradient {
     ],
   );
 
-  static LinearGradient waterGradientBackground = const LinearGradient(
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
-    colors: [
-      Color(0xFF559EDF),
-      Color(0xFF69B9E3),
-    ],
-  );
+
 }
+
+const LinearGradient bugGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF92BC2C),
+    Color(0xFFAFC836),
+  ],
+);
+
+const LinearGradient darkGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF595761),
+    Color(0xFF6E7587),
+  ],
+);
+
+const LinearGradient dragonGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF0C69C8),
+    Color(0xFF0180C7),
+  ],
+);
+
+const LinearGradient electricGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFFEDD53E),
+    Color(0xFFFBE273),
+  ],
+);
+
+const LinearGradient fairyGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFFEC8CE5),
+    Color(0xFFF3A7E7),
+  ],
+);
+
+const LinearGradient fightGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFFCE4265),
+    Color(0xFFE74347),
+  ],
+);
+
+const LinearGradient fireGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFFFB9B51),
+    Color(0xFFFBAE46),
+  ],
+);
+
+const LinearGradient flyingGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF90A7DA),
+    Color(0xFFA6C2F2),
+  ],
+);
+
+const LinearGradient ghostGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF516AAC),
+    Color(0xFF7773D4),
+  ],
+);
+
+const LinearGradient grassGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF5FBC51),
+    Color(0xFF5AC178),
+  ],
+);
+
+const LinearGradient groundGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFFDC7545),
+    Color(0xFFD29463),
+  ],
+);
+
+const LinearGradient iceGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF70CCBD),
+    Color(0xFF8CDDD4),
+  ],
+);
+
+const LinearGradient normalGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF9298A4),
+    Color(0xFFA3A49E),
+  ],
+);
+
+const LinearGradient poisonGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFFA864C7),
+    Color(0xFFC261D4),
+  ],
+);
+
+const LinearGradient psychicGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFFF66F71),
+    Color(0xFFFE9F92),
+  ],
+);
+
+const LinearGradient rockGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFFC5B489),
+    Color(0xFFD7CD90),
+  ],
+);
+
+const LinearGradient steelGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF52869D),
+    Color(0xFF58A6AA),
+  ],
+);
+
+const LinearGradient waterGradientBackground = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Color(0xFF559EDF),
+    Color(0xFF69B9E3),
+  ],
+);

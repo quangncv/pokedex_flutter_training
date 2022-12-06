@@ -1,115 +1,131 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:numerus/roman/roman.dart';
+import 'package:pokedex_app/common/constants.dart';
+import 'package:pokedex_app/data/model/response/pokemon_response.dart';
+import 'package:pokedex_app/data/model/response/type_response.dart';
+import 'package:pokedex_app/extensions/string_ext.dart';
 
-part 'pokemon.g.dart';
-
-@JsonSerializable()
 class Pokemon {
-  @JsonKey(name: 'abilities')
-  List<Abilities>? abilities;
-  @JsonKey(name: 'base_experience')
+  List<Ability>? abilities;
   int? baseExperience;
-  @JsonKey(name: 'height')
   int? height;
-  @JsonKey(name: 'id')
   int? id;
-  @JsonKey(name: 'is_default')
   bool? isDefault;
-  @JsonKey(name: 'moves')
-  List<Moves>? moves;
-  @JsonKey(name: 'name')
+  List<Move>? moves;
   String? name;
-  @JsonKey(name: 'order')
   int? order;
-  @JsonKey(name: 'species')
-  Ability? species;
-  @JsonKey(name: 'stats')
+  String? species;
   List<Stats>? stats;
-  @JsonKey(name: 'types')
   List<Types>? types;
-  @JsonKey(name: 'weight')
   int? weight;
+  DamageRelation? damageRelations;
+  List<String>? eggGroups;
+  int? hatchCounter;
+  int? genderRate;
+  String? habitat;
+  int? captureRate;
+  String? generation;
+  List<Evolution>? evolutions;
 
   Pokemon(
       {this.abilities,
-        this.baseExperience,
-        this.height,
-        this.id,
-        this.isDefault,
-        this.moves,
-        this.name,
-        this.order,
-        this.species,
-        this.stats,
-        this.types,
-        this.weight});
+      this.baseExperience,
+      this.height,
+      this.id,
+      this.isDefault,
+      this.moves,
+      this.name,
+      this.order,
+      this.species,
+      this.stats,
+      this.types,
+      this.weight,
+      this.eggGroups,
+      this.hatchCounter,
+      this.habitat,
+      this.evolutions});
 
-  factory Pokemon.fromJson(Map<String, dynamic> json) => _$PokemonFromJson(json);
-  Map<String, dynamic> toJson() =>_$PokemonToJson(this);
+  List<String> getTypes() {
+    return types?.map((e) => e.type?.name ?? 'normal').toList() ?? [];
+  }
+
+  PokemonTypes mainType() => PokemonTypes.getType(getTypes().first);
+
+  int getSteps() {
+    return 255 * ((hatchCounter ?? 0) + 1);
+  }
+
+  double maleRatio() {
+    return 12.5 * (8 - (genderRate ?? 0));
+  }
+
+  double femaleRatio() {
+    return 12.5 * (genderRate ?? 0);
+  }
+
+  String getGeneration() {
+    final strSplit = generation?.split('-');
+
+    return '${strSplit?[0]} ${strSplit?[1].toRomanNumeralValue()}';
+  }
 }
 
-@JsonSerializable()
-class Abilities {
-  @JsonKey(name: 'ability')
-  Ability? ability;
-  @JsonKey(name: 'is_hidden')
-  bool? isHidden;
-  @JsonKey(name: 'slot')
-  int? slot;
-
-  Abilities({this.ability, this.isHidden, this.slot});
-
-  factory Abilities.fromJson(Map<String, dynamic> json) => _$AbilitiesFromJson(json);
-  Map<String, dynamic> toJson() => _$AbilitiesToJson(this);
-}
-
-@JsonSerializable()
 class Ability {
-  @JsonKey(name: 'name')
   String? name;
-  @JsonKey(name: 'url')
-  String? url;
+  String? desc;
 
-  Ability({this.name, this.url});
-
-  factory Ability.fromJson(Map<String, dynamic> json) => _$AbilityFromJson(json);
-  Map<String, dynamic> toJson() => _$AbilityToJson(this);
+  Ability({this.name, this.desc});
 }
 
-@JsonSerializable()
-class Moves {
-  @JsonKey(name: 'move')
-  Ability? move;
+class Evolution {
+  int id;
+  String name;
+  int evolvesToId;
+  String evolvesToName;
+  List<int?> minLevel;
+  List<String?> trigger;
+  List<String?> items;
+  List<int?> minHappiness;
+  List<String?> timeOfDays;
+  List<String?> knownMoveTypes;
 
-  Moves({this.move});
+  Evolution(
+    this.id,
+    this.name,
+    this.evolvesToId,
+    this.evolvesToName,
+    this.minLevel,
+    this.trigger,
+    this.items,
+      this.minHappiness,
+      this.timeOfDays,
+      this.knownMoveTypes,
+  );
 
-  factory Moves.fromJson(Map<String, dynamic> json) => _$MovesFromJson(json);
-  Map<String, dynamic> toJson() => _$MovesToJson(this);
+  String getEvolutionDetail() {
+    var content = '';
+
+    switch (trigger.last) {
+      case 'use-item':
+        content = items.last.toString().capitalize().replaceAll('-', ' ');
+        break;
+      default:
+        if (minLevel.last != null) {
+          content = 'Lv.${minLevel.last}';
+        } else if (minHappiness.last != null && (timeOfDays.last ?? '').isNotEmpty) {
+          content = 'Happiness.${minHappiness.last} in ${timeOfDays.last}';
+        } else if (minHappiness.last != null && knownMoveTypes.last != null) {
+          content = 'After ${knownMoveTypes.last}-type move learned and Happiness.${minHappiness.last}';
+        }
+        break;
+    }
+
+    return content;
+  }
 }
 
-@JsonSerializable()
-class Stats {
-  @JsonKey(name: 'base_stat')
-  int? baseStat;
-  @JsonKey(name: 'effort')
-  int? effort;
-  @JsonKey(name: 'stat')
-  Ability? stat;
+class Move {
+  String name;
+  int level;
 
-  Stats({this.baseStat, this.effort, this.stat});
-
-  factory Stats.fromJson(Map<String, dynamic> json) => _$StatsFromJson(json);
-  Map<String, dynamic> toJson() => _$StatsToJson(this);
-}
-
-@JsonSerializable()
-class Types {
-  @JsonKey(name: 'slot')
-  int? slot;
-  @JsonKey(name: 'type')
-  Ability? type;
-
-  Types({this.slot, this.type});
-
-  factory Types.fromJson(Map<String, dynamic> json) => _$TypesFromJson(json);
-  Map<String, dynamic> toJson() => _$TypesToJson(this);
+  Move(this.name, this.level);
 }

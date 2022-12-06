@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pokemon.dart';
+part of 'pokemon_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Pokemon _$PokemonFromJson(Map<String, dynamic> json) => Pokemon(
+PokemonResponse _$PokemonResponseFromJson(Map<String, dynamic> json) =>
+    PokemonResponse(
       abilities: (json['abilities'] as List<dynamic>?)
           ?.map((e) => Abilities.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -15,13 +16,13 @@ Pokemon _$PokemonFromJson(Map<String, dynamic> json) => Pokemon(
       id: json['id'] as int?,
       isDefault: json['is_default'] as bool?,
       moves: (json['moves'] as List<dynamic>?)
-          ?.map((e) => Moves.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => MovesResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
       name: json['name'] as String?,
       order: json['order'] as int?,
       species: json['species'] == null
           ? null
-          : Ability.fromJson(json['species'] as Map<String, dynamic>),
+          : AbilityResponse.fromJson(json['species'] as Map<String, dynamic>),
       stats: (json['stats'] as List<dynamic>?)
           ?.map((e) => Stats.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -31,7 +32,8 @@ Pokemon _$PokemonFromJson(Map<String, dynamic> json) => Pokemon(
       weight: json['weight'] as int?,
     );
 
-Map<String, dynamic> _$PokemonToJson(Pokemon instance) => <String, dynamic>{
+Map<String, dynamic> _$PokemonResponseToJson(PokemonResponse instance) =>
+    <String, dynamic>{
       'abilities': instance.abilities,
       'base_experience': instance.baseExperience,
       'height': instance.height,
@@ -49,7 +51,7 @@ Map<String, dynamic> _$PokemonToJson(Pokemon instance) => <String, dynamic>{
 Abilities _$AbilitiesFromJson(Map<String, dynamic> json) => Abilities(
       ability: json['ability'] == null
           ? null
-          : Ability.fromJson(json['ability'] as Map<String, dynamic>),
+          : AbilityResponse.fromJson(json['ability'] as Map<String, dynamic>),
       isHidden: json['is_hidden'] as bool?,
       slot: json['slot'] as int?,
     );
@@ -60,24 +62,31 @@ Map<String, dynamic> _$AbilitiesToJson(Abilities instance) => <String, dynamic>{
       'slot': instance.slot,
     };
 
-Ability _$AbilityFromJson(Map<String, dynamic> json) => Ability(
+AbilityResponse _$AbilityResponseFromJson(Map<String, dynamic> json) =>
+    AbilityResponse(
       name: json['name'] as String?,
       url: json['url'] as String?,
     );
 
-Map<String, dynamic> _$AbilityToJson(Ability instance) => <String, dynamic>{
+Map<String, dynamic> _$AbilityResponseToJson(AbilityResponse instance) =>
+    <String, dynamic>{
       'name': instance.name,
       'url': instance.url,
     };
 
-Moves _$MovesFromJson(Map<String, dynamic> json) => Moves(
-      move: json['move'] == null
-          ? null
-          : Ability.fromJson(json['move'] as Map<String, dynamic>),
+MovesResponse _$MovesResponseFromJson(Map<String, dynamic> json) =>
+    MovesResponse(
+      MoveBaseResponse.fromJson(json['move'] as Map<String, dynamic>),
+      (json['version_group_details'] as List<dynamic>)
+          .map((e) =>
+              MoveVersionDetailResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
-Map<String, dynamic> _$MovesToJson(Moves instance) => <String, dynamic>{
+Map<String, dynamic> _$MovesResponseToJson(MovesResponse instance) =>
+    <String, dynamic>{
       'move': instance.move,
+      'version_group_details': instance.moveVersionDetails,
     };
 
 Stats _$StatsFromJson(Map<String, dynamic> json) => Stats(
@@ -85,7 +94,7 @@ Stats _$StatsFromJson(Map<String, dynamic> json) => Stats(
       effort: json['effort'] as int?,
       stat: json['stat'] == null
           ? null
-          : Ability.fromJson(json['stat'] as Map<String, dynamic>),
+          : AbilityResponse.fromJson(json['stat'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$StatsToJson(Stats instance) => <String, dynamic>{
@@ -98,10 +107,39 @@ Types _$TypesFromJson(Map<String, dynamic> json) => Types(
       slot: json['slot'] as int?,
       type: json['type'] == null
           ? null
-          : Ability.fromJson(json['type'] as Map<String, dynamic>),
+          : AbilityResponse.fromJson(json['type'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TypesToJson(Types instance) => <String, dynamic>{
       'slot': instance.slot,
       'type': instance.type,
+    };
+
+MoveVersionDetailResponse _$MoveVersionDetailResponseFromJson(
+        Map<String, dynamic> json) =>
+    MoveVersionDetailResponse(
+      json['level_learned_at'] as int,
+      MoveBaseResponse.fromJson(
+          json['move_learn_method'] as Map<String, dynamic>),
+      MoveBaseResponse.fromJson(json['version_group'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$MoveVersionDetailResponseToJson(
+        MoveVersionDetailResponse instance) =>
+    <String, dynamic>{
+      'level_learned_at': instance.levelLearnedAt,
+      'move_learn_method': instance.moveLearnMethod,
+      'version_group': instance.versionGroup,
+    };
+
+MoveBaseResponse _$MoveBaseResponseFromJson(Map<String, dynamic> json) =>
+    MoveBaseResponse(
+      json['name'] as String,
+      json['url'] as String,
+    );
+
+Map<String, dynamic> _$MoveBaseResponseToJson(MoveBaseResponse instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'url': instance.url,
     };

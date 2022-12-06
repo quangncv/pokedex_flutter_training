@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex_app/extensions/string_ext.dart';
 import 'package:pokedex_app/utils/theme.dart';
 
 class AbilityWidget extends StatelessWidget {
@@ -12,7 +13,7 @@ class AbilityWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(name, style: PrimaryFont.medium(15).copyWith(color: kColorWater),),
+        Text(name.capitalize(), style: PrimaryFont.medium(15).copyWith(color: kColorWater),),
         Text(desc, style: PrimaryFont.book(15).copyWith(color: kColorPrimaryText),)
       ],
     );

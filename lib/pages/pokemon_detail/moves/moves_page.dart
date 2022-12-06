@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/common/constants.dart';
+import 'package:pokedex_app/data/model/pokemon.dart';
+import 'package:pokedex_app/extensions/string_ext.dart';
 import 'package:pokedex_app/utils/theme.dart';
 import 'package:pokedex_app/widgets/pokemon_type_widget.dart';
 
 class MovesPage extends StatelessWidget {
-  const MovesPage({Key? key}) : super(key: key);
+  const MovesPage({Key? key, this.moves}) : super(key: key);
+
+  final List<Move>? moves;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return ListView.builder(
+      itemCount: moves?.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      children: const [
-        _BuildItemMoves(),
-        _BuildItemMoves(),
-        _BuildItemMoves(),
-        _BuildItemMoves(),
-        _BuildItemMoves(),
-      ],
+      itemBuilder: (context, index) {
+        return _BuildItemMoves(move: moves?[index],);
+      },
     );
   }
 }
 
 class _BuildItemMoves extends StatelessWidget {
   const _BuildItemMoves({
-    Key? key,
+    Key? key, required this.move,
   }) : super(key: key);
+
+  final Move? move;
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +42,22 @@ class _BuildItemMoves extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Tackle', style: PrimaryFont.medium(19).copyWith(color: kColorPrimaryText),),
-                Text('Level 1', style: PrimaryFont.book(15).copyWith(color: kColorSecondaryText),),
+                Text(
+                  move?.name.toString().capitalize() ?? '',
+                  style:
+                      PrimaryFont.medium(19).copyWith(color: kColorPrimaryText),
+                ),
+                Text(
+                  'Level ${move?.level}',
+                  style:
+                      PrimaryFont.book(15).copyWith(color: kColorSecondaryText),
+                ),
               ],
             ),
           ),
-          const PokemonTypeWidget(type: PokemonTypes.normal,),
+          const PokemonTypeWidget(
+            type: PokemonTypes.normal,
+          ),
         ],
       ),
     );

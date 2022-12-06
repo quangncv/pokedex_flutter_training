@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'item.g.dart';
+part 'item_response.g.dart';
 
 @JsonSerializable()
-class Item {
+class ItemResponse {
   @JsonKey(name: 'attributes')
   List<Attributes>? attributes;
   @JsonKey(name: 'cost')
@@ -17,10 +17,10 @@ class Item {
   @JsonKey(name: 'sprites')
   Sprites? sprites;
 
-  Item({this.attributes, this.cost, this.effectEntries, this.id, this.name, this.sprites});
+  ItemResponse({this.attributes, this.cost, this.effectEntries, this.id, this.name, this.sprites});
 
-  factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
-  Map<String, dynamic> toJson() =>_$ItemToJson(this);
+  factory ItemResponse.fromJson(Map<String, dynamic> json) => _$ItemResponseFromJson(json);
+  Map<String, dynamic> toJson() =>_$ItemResponseToJson(this);
 }
 
 @JsonSerializable()

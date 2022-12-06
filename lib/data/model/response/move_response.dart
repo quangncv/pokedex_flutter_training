@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'move.g.dart';
+part 'move_response.g.dart';
 
 @JsonSerializable()
-class Move {
+class MoveResponse {
   @JsonKey(name: 'accuracy')
   int? accuracy;
   @JsonKey(name: 'effect_entries')
@@ -21,10 +21,10 @@ class Move {
   @JsonKey(name: 'type')
   Type? type;
 
-  Move({this.accuracy, this.effectEntries, this.id, this.name, this.power, this.pp, this.priority, this.type});
+  MoveResponse({this.accuracy, this.effectEntries, this.id, this.name, this.power, this.pp, this.priority, this.type});
 
-  factory Move.fromJson(Map<String, dynamic> json) => _$MoveFromJson(json);
-  Map<String, dynamic> toJson() =>_$MoveToJson(this);
+  factory MoveResponse.fromJson(Map<String, dynamic> json) => _$MoveResponseFromJson(json);
+  Map<String, dynamic> toJson() =>_$MoveResponseToJson(this);
 }
 
 @JsonSerializable()

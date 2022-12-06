@@ -1,5 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/common/constants.dart';
+import 'package:pokedex_app/data/model/pokemon.dart';
+import 'package:pokedex_app/data/repositories/pokemon_repository.dart';
+import 'package:pokedex_app/di/injection.dart';
+import 'package:pokedex_app/extensions/string_ext.dart';
 import 'package:pokedex_app/pages/pokemon_detail/evolution/evolution_page.dart';
 import 'package:pokedex_app/pages/pokemon_detail/moves/moves_page.dart';
 import 'package:pokedex_app/pages/pokemon_detail/stats/stats_page.dart';
@@ -7,24 +13,56 @@ import 'package:pokedex_app/utils/theme.dart';
 import 'package:pokedex_app/widgets/pokemon_tag_widget.dart';
 
 class PokemonDetailPage extends StatefulWidget {
-  const PokemonDetailPage({Key? key}) : super(key: key);
+  const PokemonDetailPage({Key? key, required this.pokemon}) : super(key: key);
+
+  final Pokemon pokemon;
 
   @override
   State<PokemonDetailPage> createState() => _PokemonDetailPageState();
 }
 
 class _PokemonDetailPageState extends State<PokemonDetailPage> {
+  final pokemonRepository = getIt.get<PokemonRepository>();
+  late Pokemon pokemon;
+
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    pokemon = widget.pokemon;
+    super.initState();
+    fetchInfo();
+  }
+
+  void fetchInfo() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final data = await pokemonRepository.getInfoPokemon(pokemon);
+    setState(() {
+      pokemon = data;
+      _isLoading = false;
+    });
+
+    // setState(() {
+    //   _isLoading = false;
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration:
-            BoxDecoration(gradient: PrimaryGradient.waterGradientBackground),
+            BoxDecoration(gradient: pokemon.mainType().bgGradient),
         child: SafeArea(
-          child: CustomScrollView(
+          child: (!_isLoading) ? CustomScrollView(
             slivers: [
               SliverPersistentHeader(
-                delegate: _BuildSliverAppBar(expandedHeight: 200),
+                delegate: _BuildSliverAppBar(
+                  pokemon,
+                  expandedHeight: 200,
+                ),
                 pinned: true,
               ),
               SliverToBoxAdapter(
@@ -37,43 +75,18 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
                       topRight: Radius.circular(48),
                     ),
                   ),
-                  child: const _BuildInfo(),
+                  child: _BuildInfo(pokemon: pokemon,),
                 ),
               ),
               SliverToBoxAdapter(
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   color: Colors.white,
-                  child: const _BuildTabAttributes(),
+                  child: _BuildTabAttributes(pokemon: pokemon,),
                 ),
-              )
-              // SliverFillRemaining(
-              //   hasScrollBody: false,
-              //   child: Container(
-              //     padding: const EdgeInsets.all(16),
-              //     decoration: const BoxDecoration(
-              //       color: Colors.white,
-              //       borderRadius: BorderRadius.only(
-              //         topLeft: Radius.circular(48),
-              //         topRight: Radius.circular(48),
-              //       ),
-              //     ),
-              //     child: Column(
-              //       children: const [
-              //         SizedBox(
-              //           height: 50,
-              //         ),
-              //         _BuildInfo(),
-              //         SizedBox(
-              //           height: 20,
-              //         ),
-              //         _BuildTabAttributes()
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              ),
             ],
-          ),
+          ) : const Center(child: CircularProgressIndicator(color: Colors.white,)),
         ),
       ),
     );
@@ -82,33 +95,34 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
 
 class _BuildInfo extends StatelessWidget {
   const _BuildInfo({
-    Key? key,
+    Key? key, required this.pokemon,
   }) : super(key: key);
+
+  final Pokemon pokemon;
 
   @override
   Widget build(BuildContext context) {
+    var types = pokemon.getTypes();
+
     return Column(
       children: [
         Text(
-          'Squirtle',
+          pokemon.name.toString().capitalize(),
           style: PrimaryFont.book(40),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            PokemonTagWidget(type: PokemonTypes.water),
-            PokemonTagWidget(type: PokemonTypes.fairy),
-          ],
+          children: types.map((e) => PokemonTagWidget(type: PokemonTypes.getType(e))).toList(),
         ),
-        Text(
-          'Squirtle’s shell is not merely used for protection.\n'
-          'The shell’s rounded shape and the grooves on its '
-          'surface help minimize resistance in water, '
-          'enabling this pokemon to swim at high speed.',
-          style: PrimaryFont.book(15).copyWith(
-            color: kColorPrimaryText,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            pokemon.species.toString(),
+            style: PrimaryFont.book(15).copyWith(
+              color: kColorPrimaryText,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     );
@@ -116,7 +130,9 @@ class _BuildInfo extends StatelessWidget {
 }
 
 class _BuildTabAttributes extends StatefulWidget {
-  const _BuildTabAttributes({Key? key}) : super(key: key);
+  const _BuildTabAttributes({Key? key, required this.pokemon}) : super(key: key);
+
+  final Pokemon pokemon;
 
   @override
   State<_BuildTabAttributes> createState() => _BuildTabAttributesState();
@@ -164,22 +180,22 @@ class _BuildTabAttributesState extends State<_BuildTabAttributes>
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              color: kColorWater,
+              color: widget.pokemon.mainType().color,
               shadows: [
-                BoxShadow(color: kColorWater.withOpacity(0.7), blurRadius: 10)
+                BoxShadow(color: widget.pokemon.mainType().color.withOpacity(0.7), blurRadius: 10)
               ],
             ),
-            unselectedLabelColor: kColorWater,
+            unselectedLabelColor: widget.pokemon.mainType().color,
             labelStyle: PrimaryFont.medium(13),
             controller: _tabController,
             tabs: tabs,
           ),
           IndexedStack(
             index: _tabSelected,
-            children: const [
-              StatsPage(),
-              EvolutionPage(),
-              MovesPage(),
+            children: [
+              StatsPage(pokemon: widget.pokemon,),
+              EvolutionPage(evolutions: widget.pokemon.evolutions,),
+              MovesPage(moves: widget.pokemon.moves,),
             ],
           ),
         ],
@@ -190,8 +206,9 @@ class _BuildTabAttributesState extends State<_BuildTabAttributes>
 
 class _BuildSliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
+  final Pokemon pokemon;
 
-  _BuildSliverAppBar({required this.expandedHeight});
+  _BuildSliverAppBar(this.pokemon, {required this.expandedHeight});
 
   @override
   Widget build(
@@ -202,14 +219,14 @@ class _BuildSliverAppBar extends SliverPersistentHeaderDelegate {
       children: [
         Container(
           decoration: BoxDecoration(
-            gradient: PrimaryGradient.waterGradientBackground,
+            gradient: pokemon.mainType().bgGradient,
           ),
         ),
         Center(
           child: Opacity(
             opacity: shrinkOffset / expandedHeight,
             child: Text(
-              "Squirtle",
+              pokemon.name.toString().capitalize(),
               style: PrimaryFont.book(20).copyWith(color: Colors.white),
             ),
           ),
@@ -223,9 +240,10 @@ class _BuildSliverAppBar extends SliverPersistentHeaderDelegate {
               elevation: 0,
               color: Colors.transparent,
               child: SizedBox(
-                  height: expandedHeight,
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: Image.asset(ImageAssets.img_squirtle)),
+                height: expandedHeight,
+                width: MediaQuery.of(context).size.width / 2,
+                child: Image.network('$pokemonImageUrl${pokemon.id}.png', fit: BoxFit.fitHeight,),
+              ),
             ),
           ),
         ),

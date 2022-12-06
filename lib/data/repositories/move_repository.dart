@@ -1,8 +1,8 @@
-import 'package:pokedex_app/data/model/move.dart';
+import 'package:pokedex_app/data/model/response/move_response.dart';
 import 'package:pokedex_app/data/network/api_service.dart';
 
 abstract class MoveRepository {
-  Future<List<Move>> getMoves(int offset, int limit);
+  Future<List<MoveResponse>> getMoves(int offset, int limit);
 }
 
 class DefaultMoveRepository implements MoveRepository {
@@ -11,11 +11,11 @@ class DefaultMoveRepository implements MoveRepository {
       _apiService = apiService;
 
   @override
-  Future<List<Move>> getMoves(offset, limit) async {
+  Future<List<MoveResponse>> getMoves(offset, limit) async {
     final data = await _apiService.getMoves(offset, limit);
     final moveList = data.results;
 
-    final List<Move> newMoveList = [];
+    final List<MoveResponse> newMoveList = [];
 
     await Future.forEach(moveList, (move) async {
       final moveData = await _apiService.getMove(move.name ?? '');

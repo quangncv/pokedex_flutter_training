@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
   final repository = getIt.get<PokemonRepository>();
 
   int offset = 0;
-  final int limit = 20;
+  final int limit = 15;
   bool hasNextPage = true;
   bool isFirstLoadRunning = false;
   bool isLoadMoreRunning = false;
@@ -148,7 +147,7 @@ class _BuildItemPokemon extends StatelessWidget {
         //     builder: (context) {
         //       return const _BuildWeaknessDialog();
         //     });
-        Navigator.of(context).pushNamed('$PokemonDetailPage');
+        Navigator.of(context).pushNamed('$PokemonDetailPage', arguments: pokemon);
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0),

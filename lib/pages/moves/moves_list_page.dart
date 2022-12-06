@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/common/constants.dart';
-import 'package:pokedex_app/data/model/move.dart';
+import 'package:pokedex_app/data/model/response/move_response.dart';
 import 'package:pokedex_app/data/repositories/move_repository.dart';
 import 'package:pokedex_app/di/injection.dart';
 import 'package:pokedex_app/extensions/string_ext.dart';
@@ -24,7 +24,7 @@ class _MovesListPageState extends State<MovesListPage> {
   bool isFirstLoadRunning = false;
   bool isLoadMoreRunning = false;
 
-  final List<Move> moveList = [];
+  final List<MoveResponse> moveList = [];
 
   late ScrollController _scrollController;
 
@@ -123,7 +123,7 @@ class _BuildItemMoves extends StatelessWidget {
   const _BuildItemMoves({Key? key, required this.move,})
       : super(key: key);
 
-  final Move move;
+  final MoveResponse move;
 
   @override
   Widget build(BuildContext context) {

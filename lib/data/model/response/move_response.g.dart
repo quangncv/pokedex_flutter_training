@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'move.dart';
+part of 'move_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Move _$MoveFromJson(Map<String, dynamic> json) => Move(
+MoveResponse _$MoveResponseFromJson(Map<String, dynamic> json) => MoveResponse(
       accuracy: json['accuracy'] as int?,
       effectEntries: (json['effect_entries'] as List<dynamic>?)
           ?.map((e) => EffectEntries.fromJson(e as Map<String, dynamic>))
@@ -21,7 +21,8 @@ Move _$MoveFromJson(Map<String, dynamic> json) => Move(
           : Type.fromJson(json['type'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$MoveToJson(Move instance) => <String, dynamic>{
+Map<String, dynamic> _$MoveResponseToJson(MoveResponse instance) =>
+    <String, dynamic>{
       'accuracy': instance.accuracy,
       'effect_entries': instance.effectEntries,
       'id': instance.id,

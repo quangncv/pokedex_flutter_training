@@ -19,7 +19,7 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<PageResponse<Pokemon>> getPokemons(
+  Future<PageResponse<PokemonResponse>> getPokemons(
     offset,
     limit,
   ) async {
@@ -31,7 +31,7 @@ class _ApiService implements ApiService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<PageResponse<Pokemon>>(Options(
+        _setStreamType<PageResponse<PokemonResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -43,21 +43,21 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = PageResponse<Pokemon>.fromJson(
+    final value = PageResponse<PokemonResponse>.fromJson(
       _result.data!,
-      (json) => Pokemon.fromJson(json as Map<String, dynamic>),
+      (json) => PokemonResponse.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
 
   @override
-  Future<Pokemon> getPokemon(name) async {
+  Future<PokemonResponse> getPokemon(name) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Pokemon>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<PokemonResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -69,12 +69,12 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Pokemon.fromJson(_result.data!);
+    final value = PokemonResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<PageResponse<Move>> getMoves(
+  Future<PageResponse<MoveResponse>> getMoves(
     offset,
     limit,
   ) async {
@@ -85,8 +85,8 @@ class _ApiService implements ApiService {
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<PageResponse<Move>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<PageResponse<MoveResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -98,21 +98,21 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = PageResponse<Move>.fromJson(
+    final value = PageResponse<MoveResponse>.fromJson(
       _result.data!,
-      (json) => Move.fromJson(json as Map<String, dynamic>),
+      (json) => MoveResponse.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
 
   @override
-  Future<Move> getMove(name) async {
+  Future<MoveResponse> getMove(name) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Move>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<MoveResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -124,12 +124,12 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Move.fromJson(_result.data!);
+    final value = MoveResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<PageResponse<Item>> getItems(
+  Future<PageResponse<ItemResponse>> getItems(
     offset,
     limit,
   ) async {
@@ -140,8 +140,8 @@ class _ApiService implements ApiService {
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<PageResponse<Item>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<PageResponse<ItemResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -153,21 +153,21 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = PageResponse<Item>.fromJson(
+    final value = PageResponse<ItemResponse>.fromJson(
       _result.data!,
-      (json) => Item.fromJson(json as Map<String, dynamic>),
+      (json) => ItemResponse.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
 
   @override
-  Future<Item> getItem(name) async {
+  Future<ItemResponse> getItem(name) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Item>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ItemResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -179,7 +179,99 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Item.fromJson(_result.data!);
+    final value = ItemResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<SpeciesResponse> getSpecies(id) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<SpeciesResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/pokemon-species/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = SpeciesResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<TypeResponse> getType(name) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<TypeResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/type/${name}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = TypeResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<AbilityDetailResponse> getAbility(name) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<AbilityDetailResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/ability/${name}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = AbilityDetailResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<EvolutionResponse> getEvolution(id) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<EvolutionResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/evolution-chain/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = EvolutionResponse.fromJson(_result.data!);
     return value;
   }
 

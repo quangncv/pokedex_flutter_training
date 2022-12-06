@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/common/constants.dart';
-import 'package:pokedex_app/data/model/item.dart';
+import 'package:pokedex_app/data/model/response/item_response.dart';
 import 'package:pokedex_app/data/repositories/item_repository.dart';
 import 'package:pokedex_app/di/injection.dart';
 import 'package:pokedex_app/extensions/string_ext.dart';
@@ -24,7 +24,7 @@ class _ItemsListPageState extends State<ItemsListPage> {
   bool isFirstLoadRunning = false;
   bool isLoadMoreRunning = false;
 
-  final List<Item> itemList = [];
+  final List<ItemResponse> itemList = [];
 
   late ScrollController _scrollController;
 
@@ -122,7 +122,7 @@ class _ItemsListPageState extends State<ItemsListPage> {
 class _BuildSingleItem extends StatelessWidget {
   const _BuildSingleItem({Key? key, required this.item}) : super(key: key);
 
-  final Item item;
+  final ItemResponse item;
 
   @override
   Widget build(BuildContext context) {

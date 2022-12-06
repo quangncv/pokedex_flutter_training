@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routes: routes,
+      // routes: routes,
+      onGenerateRoute: generatorRoute,
       initialRoute: '$SplashPage',
     );
   }
