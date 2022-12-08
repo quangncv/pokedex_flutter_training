@@ -22,7 +22,7 @@ class _SplashPageState extends State<SplashPage> {
   void directToHome() async {
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
-      Navigator.of(context).pushNamed('$HomePage');
+      Navigator.of(context).pushNamedAndRemoveUntil('$HomePage', (Route<dynamic> route) => false);
     }
   }
 

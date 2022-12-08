@@ -1,11 +1,14 @@
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_app/common/constants.dart';
 import 'package:pokedex_app/data/model/pokemon.dart';
-import 'package:pokedex_app/data/repositories/pokemon_repository.dart';
 import 'package:pokedex_app/di/injection.dart';
 import 'package:pokedex_app/extensions/string_ext.dart';
+import 'package:pokedex_app/pages/pokemon/bloc/pokemon_list_cubit.dart';
+import 'package:pokedex_app/pages/pokemon/bloc/pokemon_list_state.dart';
 import 'package:pokedex_app/pages/pokemon_detail/pokemon_detail_page.dart';
 import 'package:pokedex_app/utils/theme.dart';
 import 'package:pokedex_app/widgets/appbar_search_widget.dart';
@@ -20,7 +23,7 @@ class PokemonListPage extends StatefulWidget {
 }
 
 class _PokemonListPageState extends State<PokemonListPage> {
-  final repository = getIt.get<PokemonRepository>();
+  final pokemonListCubit = getIt.get<PokemonListCubit>();
 
   int offset = 0;
   final int limit = 15;
@@ -35,28 +38,19 @@ class _PokemonListPageState extends State<PokemonListPage> {
   @override
   void initState() {
     super.initState();
-    _firstLoad();
+    pokemonListCubit.getPokemonList(offset, limit);
     _scrollController = ScrollController()
       ..addListener(() {
         _loadMore();
       });
   }
 
-  void _firstLoad() async {
-    setState(() {
-      isFirstLoadRunning = true;
+  @override
+  void dispose() {
+    _scrollController.removeListener(() {
+      _loadMore();
     });
-
-    final data = await repository.getPokemons(offset, limit);
-    if (data.isNotEmpty) {
-      setState(() {
-        pokemonList.addAll(data);
-      });
-    }
-
-    setState((){
-      isFirstLoadRunning = false;
-    });
+    super.dispose();
   }
 
   void _loadMore() async {
@@ -64,24 +58,9 @@ class _PokemonListPageState extends State<PokemonListPage> {
         !isFirstLoadRunning &&
         !isLoadMoreRunning &&
         _scrollController.position.extentAfter < 300) {
-      setState((){
-        isLoadMoreRunning = true;
-      });
-
+      isLoadMoreRunning = true;
       offset += limit;
-
-      final data = await repository.getPokemons(offset, limit);
-      if (data.isNotEmpty) {
-        setState((){
-          pokemonList.addAll(data);
-        });
-      } else {
-        hasNextPage = false;
-      }
-
-      setState((){
-        isLoadMoreRunning = false;
-      });
+      pokemonListCubit.getMorePokemonList(offset, limit);
     }
   }
 
@@ -92,34 +71,73 @@ class _PokemonListPageState extends State<PokemonListPage> {
         const AppBarSearchWidget(
           title: 'Pokemon',
         ),
-        if (isFirstLoadRunning)
-          const Expanded(
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          )
-        else
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              controller: _scrollController,
-              itemCount: pokemonList.length,
-              itemBuilder: (context, index) {
-                final pokemon = pokemonList[index];
-                return _BuildItemPokemon(
-                  pokemon: pokemon,
-                );
-              },
-            ),
+        BlocProvider(
+          create: (_) => pokemonListCubit,
+          child: BlocConsumer<PokemonListCubit, PokemonListState>(
+            builder: (context, state) {
+              return _buildPokemonList(state);
+            },
+            listener: (context, state) {
+              if (state is PokemonListError) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.message!)));
+              }
+            },
           ),
-        if (isLoadMoreRunning == true)
-          const Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 20),
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
+        ),
       ],
+    );
+  }
+
+  Widget _buildPokemonList(PokemonListState state) {
+    if (state is PokemonListLoaded) {
+      isFirstLoadRunning = false;
+      isLoadMoreRunning = false;
+      if (state.pokemonList.isEmpty) {
+        hasNextPage = false;
+      }
+      pokemonList.addAll(state.pokemonList);
+    } else if (state is PokemonListInitial || state is PokemonListLoading) {
+      isFirstLoadRunning = true;
+    } else {
+      isLoadMoreRunning = false;
+      isFirstLoadRunning = false;
+    }
+
+    return Expanded(
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: _scrollController,
+                  itemCount: pokemonList.length,
+                  itemBuilder: (context, index) {
+                    final pokemon = pokemonList[index];
+                    return _BuildItemPokemon(
+                      pokemon: pokemon,
+                    );
+                  },
+                ),
+              ),
+              if (state is PokemonListLoadingMore)
+                const Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 20),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+            ],
+          ),
+          if (state is PokemonListInitial || state is PokemonListLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -147,7 +165,8 @@ class _BuildItemPokemon extends StatelessWidget {
         //     builder: (context) {
         //       return const _BuildWeaknessDialog();
         //     });
-        Navigator.of(context).pushNamed('$PokemonDetailPage', arguments: pokemon);
+        Navigator.of(context)
+            .pushNamed('$PokemonDetailPage', arguments: pokemon);
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0),
@@ -159,9 +178,11 @@ class _BuildItemPokemon extends StatelessWidget {
           child: Row(
             children: [
               CachedNetworkImage(
-                imageUrl:'$pokemonImageUrl${pokemon.id}.png',
+                imageUrl: '$pokemonImageUrl${pokemon.id}.png',
                 placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(strokeWidth: 2.0,),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.0,
+                  ),
                 ),
                 width: 50,
               ),
