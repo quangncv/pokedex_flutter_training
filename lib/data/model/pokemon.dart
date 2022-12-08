@@ -126,6 +126,7 @@ class Evolution {
 class Move {
   String name;
   int level;
+  String? type;
 
-  Move(this.name, this.level);
+  Move(this.name, this.level, this.type);
 }

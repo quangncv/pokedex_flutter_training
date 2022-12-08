@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pokedex_app/common/constants.dart';
 import 'package:pokedex_app/data/model/pokemon.dart';
 import 'package:pokedex_app/data/model/response/type_response.dart';
@@ -39,11 +41,15 @@ class StatsPage extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          _BuildBreeding(pokemon: pokemon,),
+          _BuildBreeding(
+            pokemon: pokemon,
+          ),
           const SizedBox(
             height: 20,
           ),
-          _BuildCapture(pokemon: pokemon,),
+          _BuildCapture(
+            pokemon: pokemon,
+          ),
         ],
       ),
     );
@@ -218,7 +224,7 @@ class _BuildBreeding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var eggGroups = '';
-    for(var i = 0; i < (pokemon.eggGroups?.length ?? 0); i++) {
+    for (var i = 0; i < (pokemon.eggGroups?.length ?? 0); i++) {
       eggGroups += pokemon.eggGroups?[i].capitalize() ?? '';
       if (i < (pokemon.eggGroups?.length ?? 0) - 1) {
         eggGroups += '\n';
@@ -247,10 +253,15 @@ class _BuildBreeding extends StatelessWidget {
                       style:
                           PrimaryFont.medium(15).copyWith(color: kColorWater),
                     ),
-                    Text(
-                      eggGroups,
-                      style: PrimaryFont.book(15),
-                      textAlign: TextAlign.center,
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          eggGroups,
+                          style: PrimaryFont.book(15),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -264,9 +275,14 @@ class _BuildBreeding extends StatelessWidget {
                       style:
                           PrimaryFont.medium(15).copyWith(color: kColorWater),
                     ),
-                    Text(
-                      '${pokemon.getSteps()} Steps\n${pokemon.hatchCounter} Cycles',
-                      style: PrimaryFont.book(15),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${pokemon.getSteps()} Steps\n${pokemon.hatchCounter} Cycles',
+                          style: PrimaryFont.book(15),
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -280,13 +296,33 @@ class _BuildBreeding extends StatelessWidget {
                       style:
                           PrimaryFont.medium(15).copyWith(color: kColorWater),
                     ),
-                    Text(
-                      '${pokemon.femaleRatio()}%',
-                      style: PrimaryFont.book(15).copyWith(color: kColorFemale),
-                    ),
-                    Text(
-                      '${pokemon.maleRatio()}%',
-                      style: PrimaryFont.book(15).copyWith(color: kColorMale),
+                    Row(
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              '${pokemon.femaleRatio()}%',
+                              style: PrimaryFont.book(15)
+                                  .copyWith(color: kColorFemale),
+                            ),
+                            Text(
+                              '${pokemon.maleRatio()}%',
+                              style: PrimaryFont.book(15)
+                                  .copyWith(color: kColorMale),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: CircularPercentIndicator(
+                            radius: 25,
+                            lineWidth: 5,
+                            percent: pokemon.femaleRatio() / 100,
+                            progressColor: kColorFemale,
+                            backgroundColor: kColorMale,
+                            center: SvgPicture.asset(ImageAssets.ic_gender),
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -328,9 +364,14 @@ class _BuildCapture extends StatelessWidget {
                       style:
                           PrimaryFont.medium(15).copyWith(color: kColorWater),
                     ),
-                    Text(
-                      pokemon.habitat.toString().capitalize(),
-                      style: PrimaryFont.book(15),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          pokemon.habitat.toString().capitalize(),
+                          style: PrimaryFont.book(15),
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -344,9 +385,14 @@ class _BuildCapture extends StatelessWidget {
                       style:
                           PrimaryFont.medium(15).copyWith(color: kColorWater),
                     ),
-                    Text(
-                      pokemon.getGeneration().capitalize(),
-                      style: PrimaryFont.book(15),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          pokemon.getGeneration().capitalize(),
+                          style: PrimaryFont.book(15),
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -360,9 +406,21 @@ class _BuildCapture extends StatelessWidget {
                       style:
                           PrimaryFont.medium(15).copyWith(color: kColorWater),
                     ),
-                    Text(
-                      '${pokemon.captureRate}%',
-                      style: PrimaryFont.book(15),
+                    Row(
+                      children: [
+                        Text(
+                          '${pokemon.captureRate}%',
+                          style: PrimaryFont.book(15),
+                        ),
+                        Expanded(
+                          child: CircularPercentIndicator(
+                            radius: 25,
+                            percent: (pokemon.captureRate ?? 0) / 100,
+                            center: SvgPicture.asset(ImageAssets.ic_capture_rate),
+                            progressColor: pokemon.mainType().color,
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),

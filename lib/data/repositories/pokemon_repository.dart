@@ -43,14 +43,17 @@ class DefaultPokemonRepository implements PokemonRepository {
     pokemon.generation = speciesData.generation?.name;
     pokemon.captureRate = speciesData.captureRate;
 
+    // Evolution
     final pathEvolutionUrl = speciesData.evolutionChain?.url?.split('/');
     final String? evolutionId = pathEvolutionUrl?[pathEvolutionUrl.length - 2];
     final evolutionData = await _apiService.getEvolution(evolutionId.toString());
     pokemon.evolutions = evolutionData.toEvolutionModel();
 
+    // Weaknesses
     final typeData = await _apiService.getType(pokemon.mainType().name);
     pokemon.damageRelations = typeData.damageRelations;
 
+    // Abilities
     final List<Ability> abilities = pokemon.abilities ?? [];
     final List<Ability> newAbilities = [];
     await Future.forEach(abilities, (ability) async {
@@ -59,6 +62,16 @@ class DefaultPokemonRepository implements PokemonRepository {
       newAbilities.add(abilityModel);
     });
     pokemon.abilities = newAbilities;
+
+    // Moves
+    final List<Move> moves = pokemon.moves ?? [];
+    final List<Move> newMoves = [];
+    await Future.forEach(moves, (move) async {
+      final moveData = await _apiService.getMove(move.name);
+      final moveModel = Move(moveData.name ?? '', move.level, moveData.type?.name);
+      newMoves.add(moveModel);
+    });
+    pokemon.moves = newMoves;
 
     return pokemon;
   }

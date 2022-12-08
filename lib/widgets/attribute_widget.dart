@@ -32,11 +32,13 @@ class AttributeWidget extends StatelessWidget {
         Expanded(
           flex: 9,
           child: LinearPercentIndicator(
+            animation: true,
+            animationDuration: 1000,
             leading: Text(
               value.toString().padLeft(3, '0'),
               style: PrimaryFont.book(14).copyWith(color: kColorValueText),
             ),
-            percent: value / 250,
+            percent: value / 255,
             lineHeight: 10,
             barRadius: const Radius.circular(4),
             backgroundColor: kColorLightGrey,

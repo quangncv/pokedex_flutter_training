@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+    <g id="Group_3" data-name="Group 3" transform="translate(0.5 0.5)">
+        <circle id="Oval_4" data-name="Oval 4" cx="7" cy="7" r="7" fill="none" stroke="#559edf" stroke-miterlimit="10" stroke-width="1"/>
+        <circle id="Oval_4-2" data-name="Oval 4" cx="2.692" cy="2.692" r="2.692" transform="translate(4.308 4.308)" fill="none" stroke="#559edf" stroke-miterlimit="10" stroke-width="1"/>
+        <circle id="Oval_4-3" data-name="Oval 4" cx="0.538" cy="0.538" r="0.538" transform="translate(6.462 6.462)" fill="none" stroke="#559edf" stroke-miterlimit="10" stroke-width="1"/>
+        <path id="Path_7" data-name="Path 7" d="M0,.012c1.446.043,2.853-.043,4.3,0Z" transform="translate(0.059 6.951)" fill="none" stroke="#559edf" stroke-miterlimit="10" stroke-width="1"/>
+        <path id="Path_7-2" data-name="Path 7" d="M0,0H0Z" transform="translate(9.705 6.983)" fill="none" stroke="#559edf" stroke-miterlimit="10" stroke-width="1"/>
+    </g>
+</svg>

@@ -5,6 +5,8 @@ const pokemonImageUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/maste
 
 class ImageAssets {
   static const ic_logo = 'assets/images/ic_logo.svg';
+  static const ic_gender = 'assets/images/ic_gender.svg';
+  static const ic_capture_rate = 'assets/images/ic_capture_rate.svg';
   static const ic_pokemon = 'assets/images/ic_pokemon.svg';
   static const ic_moves = 'assets/images/ic_moves.svg';
   static const ic_items = 'assets/images/ic_items.svg';

@@ -64,7 +64,7 @@ class PokemonResponse {
 
     movesByLevelUp?.forEach((element) {
       final detail = element.moveVersionDetails.firstWhere((element) => element.moveLearnMethod.name == 'level-up' && element.versionGroup.name == 'ruby-sapphire');
-      final move = Move(element.move.name, detail.levelLearnedAt);
+      final move = Move(element.move.name, detail.levelLearnedAt, null);
       moveList.add(move);
     });
 

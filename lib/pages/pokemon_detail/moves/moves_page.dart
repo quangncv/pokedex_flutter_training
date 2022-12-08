@@ -55,8 +55,8 @@ class _BuildItemMoves extends StatelessWidget {
               ],
             ),
           ),
-          const PokemonTypeWidget(
-            type: PokemonTypes.normal,
+          PokemonTypeWidget(
+            type: PokemonTypes.getType(move?.type ?? 'normal'),
           ),
         ],
       ),
