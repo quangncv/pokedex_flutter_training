@@ -30,13 +30,13 @@ class StatsPage extends StatelessWidget {
             height: 20,
           ),
           _BuildWeaknesses(
-            damageRelation: pokemon.damageRelations,
+            pokemon: pokemon,
           ),
           const SizedBox(
             height: 20,
           ),
           _BuildAbilities(
-            abilities: pokemon.abilities,
+            pokemon: pokemon,
           ),
           const SizedBox(
             height: 20,
@@ -110,9 +110,12 @@ class _BuildAttribute extends StatelessWidget {
 }
 
 class _BuildWeaknesses extends StatelessWidget {
-  _BuildWeaknesses({Key? key, required this.damageRelation}) : super(key: key);
+  _BuildWeaknesses({
+    Key? key,
+    required this.pokemon,
+  }) : super(key: key);
 
-  final DamageRelation? damageRelation;
+  final Pokemon pokemon;
 
   final weakness = <String, String>{
     'bug': '1X',
@@ -136,10 +139,10 @@ class _BuildWeaknesses extends StatelessWidget {
   };
 
   void init() {
-    for (var element in damageRelation?.doubleDamageFrom ?? []) {
+    for (var element in pokemon.damageRelations?.doubleDamageFrom ?? []) {
       weakness[element.name] = '2X';
     }
-    for (var element in damageRelation?.halfDamageFrom ?? []) {
+    for (var element in pokemon.damageRelations?.halfDamageFrom ?? []) {
       weakness[element.name] = '1/2X';
     }
   }
@@ -159,7 +162,7 @@ class _BuildWeaknesses extends StatelessWidget {
         Text(
           'Weaknesses',
           style: PrimaryFont.medium(20).copyWith(
-            color: kColorWater,
+            color: pokemon.mainType().color,
           ),
         ),
         GridView.count(
@@ -175,9 +178,12 @@ class _BuildWeaknesses extends StatelessWidget {
 }
 
 class _BuildAbilities extends StatelessWidget {
-  const _BuildAbilities({Key? key, required this.abilities}) : super(key: key);
+  const _BuildAbilities({
+    Key? key,
+    required this.pokemon,
+  }) : super(key: key);
 
-  final List<Ability>? abilities;
+  final Pokemon pokemon;
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +192,7 @@ class _BuildAbilities extends StatelessWidget {
         Text(
           'Abilities',
           style: PrimaryFont.medium(20).copyWith(
-            color: kColorWater,
+            color: pokemon.mainType().color,
           ),
         ),
         const SizedBox(
@@ -195,15 +201,17 @@ class _BuildAbilities extends StatelessWidget {
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: abilities?.length,
+          itemCount: pokemon.abilities?.length,
           itemBuilder: (context, index) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AbilityWidget(
-                    name: abilities?[index].name ?? '',
-                    desc: abilities?[index].desc ?? ''),
-                if (index < (abilities?.length ?? 0) - 1)
+                  name: pokemon.abilities?[index].name ?? '',
+                  desc: pokemon.abilities?[index].desc ?? '',
+                  color: pokemon.mainType().color,
+                ),
+                if (index < (pokemon.abilities?.length ?? 0) - 1)
                   const Divider(
                     color: kColorDivider,
                   ),
@@ -236,7 +244,7 @@ class _BuildBreeding extends StatelessWidget {
         Text(
           'Breeding',
           style: PrimaryFont.medium(20).copyWith(
-            color: kColorWater,
+            color: pokemon.mainType().color,
           ),
         ),
         const SizedBox(
@@ -250,8 +258,8 @@ class _BuildBreeding extends StatelessWidget {
                   children: [
                     Text(
                       'Egg Group',
-                      style:
-                          PrimaryFont.medium(15).copyWith(color: kColorWater),
+                      style: PrimaryFont.medium(15)
+                          .copyWith(color: pokemon.mainType().color),
                     ),
                     Expanded(
                       child: Align(
@@ -272,8 +280,8 @@ class _BuildBreeding extends StatelessWidget {
                   children: [
                     Text(
                       'Hatch Time',
-                      style:
-                          PrimaryFont.medium(15).copyWith(color: kColorWater),
+                      style: PrimaryFont.medium(15)
+                          .copyWith(color: pokemon.mainType().color),
                     ),
                     Expanded(
                       child: Align(
@@ -293,8 +301,8 @@ class _BuildBreeding extends StatelessWidget {
                   children: [
                     Text(
                       'Gender',
-                      style:
-                          PrimaryFont.medium(15).copyWith(color: kColorWater),
+                      style: PrimaryFont.medium(15)
+                          .copyWith(color: pokemon.mainType().color),
                     ),
                     Row(
                       children: [
@@ -347,7 +355,7 @@ class _BuildCapture extends StatelessWidget {
         Text(
           'Capture',
           style: PrimaryFont.medium(20).copyWith(
-            color: kColorWater,
+            color: pokemon.mainType().color,
           ),
         ),
         const SizedBox(
@@ -362,7 +370,7 @@ class _BuildCapture extends StatelessWidget {
                     Text(
                       'Habitat',
                       style:
-                          PrimaryFont.medium(15).copyWith(color: kColorWater),
+                          PrimaryFont.medium(15).copyWith(color: pokemon.mainType().color),
                     ),
                     Expanded(
                       child: Align(
@@ -383,7 +391,7 @@ class _BuildCapture extends StatelessWidget {
                     Text(
                       'Generation',
                       style:
-                          PrimaryFont.medium(15).copyWith(color: kColorWater),
+                          PrimaryFont.medium(15).copyWith(color: pokemon.mainType().color),
                     ),
                     Expanded(
                       child: Align(
@@ -404,24 +412,14 @@ class _BuildCapture extends StatelessWidget {
                     Text(
                       'Capture Rate',
                       style:
-                          PrimaryFont.medium(15).copyWith(color: kColorWater),
+                          PrimaryFont.medium(15).copyWith(color: pokemon.mainType().color),
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          '${pokemon.captureRate}%',
-                          style: PrimaryFont.book(15),
-                        ),
-                        Expanded(
-                          child: CircularPercentIndicator(
-                            radius: 25,
-                            percent: (pokemon.captureRate ?? 0) / 100,
-                            center: SvgPicture.asset(ImageAssets.ic_capture_rate),
-                            progressColor: pokemon.mainType().color,
-                          ),
-                        ),
-                      ],
-                    )
+                    Text(
+                      '${pokemon.captureRate}%',
+                      style: PrimaryFont.book(15).copyWith(
+                        color: pokemon.mainType().color
+                      ),
+                    ),
                   ],
                 ),
               ),

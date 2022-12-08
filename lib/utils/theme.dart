@@ -8,6 +8,7 @@ const kColorDivider = Color(0xFFE3E3E3);
 const kColorLightGrey = Color(0xFFF0F0F0);
 const kColorFemale = Color(0xFFCE71E1);
 const kColorMale = Color(0xFF80B6F4);
+const kColorCaptureRate = Color(0xFF80B6F4);
 
 const kColorBug = Color(0xFF9DC130);
 const kColorDark = Color(0xFF5F606D);

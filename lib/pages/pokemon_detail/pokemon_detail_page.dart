@@ -100,27 +100,30 @@ class _BuildInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     var types = pokemon.getTypes();
 
-    return Column(
-      children: [
-        Text(
-          pokemon.name.toString().capitalize(),
-          style: PrimaryFont.book(40),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: types.map((e) => PokemonTagWidget(type: PokemonTypes.getType(e))).toList(),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            pokemon.species.toString(),
-            style: PrimaryFont.book(15).copyWith(
-              color: kColorPrimaryText,
-            ),
-            textAlign: TextAlign.center,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        children: [
+          Text(
+            pokemon.name.toString().capitalize(),
+            style: PrimaryFont.book(40),
           ),
-        ),
-      ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: types.map((e) => PokemonTagWidget(type: PokemonTypes.getType(e))).toList(),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              pokemon.species.toString(),
+              style: PrimaryFont.book(15).copyWith(
+                color: kColorPrimaryText,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -177,9 +180,6 @@ class _BuildTabAttributesState extends State<_BuildTabAttributes>
                 borderRadius: BorderRadius.circular(20),
               ),
               color: widget.pokemon.mainType().color,
-              shadows: [
-                BoxShadow(color: widget.pokemon.mainType().color.withOpacity(0.7), blurRadius: 10)
-              ],
             ),
             unselectedLabelColor: widget.pokemon.mainType().color,
             labelStyle: PrimaryFont.medium(13),

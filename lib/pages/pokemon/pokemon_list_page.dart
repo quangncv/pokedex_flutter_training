@@ -161,10 +161,7 @@ class _BuildItemPokemon extends StatelessWidget {
               CachedNetworkImage(
                 imageUrl:'$pokemonImageUrl${pokemon.id}.png',
                 placeholder: (context, url) => const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: CircularProgressIndicator(),
-                  ),
+                  child: CircularProgressIndicator(strokeWidth: 2.0,),
                 ),
                 width: 50,
               ),
