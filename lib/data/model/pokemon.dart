@@ -1,5 +1,6 @@
 import 'package:numerus/roman/roman.dart';
 import 'package:pokedex_app/common/constants.dart';
+import 'package:pokedex_app/data/model/move.dart';
 import 'package:pokedex_app/data/model/response/pokemon_response.dart';
 import 'package:pokedex_app/data/model/response/type_response.dart';
 import 'package:pokedex_app/extensions/string_ext.dart';
@@ -121,12 +122,4 @@ class Evolution {
 
     return content;
   }
-}
-
-class Move {
-  String name;
-  int level;
-  String? type;
-
-  Move(this.name, this.level, this.type);
 }

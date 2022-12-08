@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/common/constants.dart';
+import 'package:pokedex_app/data/model/move.dart';
 import 'package:pokedex_app/data/model/response/move_response.dart';
 import 'package:pokedex_app/data/repositories/move_repository.dart';
 import 'package:pokedex_app/di/injection.dart';
 import 'package:pokedex_app/extensions/string_ext.dart';
+import 'package:pokedex_app/pages/moves/move_detail/move_detail_page.dart';
 import 'package:pokedex_app/utils/theme.dart';
 import 'package:pokedex_app/widgets/appbar_search_widget.dart';
 import 'package:pokedex_app/widgets/pokemon_type_widget.dart';
@@ -19,12 +21,12 @@ class _MovesListPageState extends State<MovesListPage> {
   final repository = getIt.get<MoveRepository>();
 
   int offset = 0;
-  final int limit = 20;
+  final int limit = 15;
   bool hasNextPage = true;
   bool isFirstLoadRunning = false;
   bool isLoadMoreRunning = false;
 
-  final List<MoveResponse> moveList = [];
+  final List<Move> moveList = [];
 
   late ScrollController _scrollController;
 
@@ -123,30 +125,36 @@ class _BuildItemMoves extends StatelessWidget {
   const _BuildItemMoves({Key? key, required this.move,})
       : super(key: key);
 
-  final MoveResponse move;
+  final Move move;
 
   @override
   Widget build(BuildContext context) {
-    final type = PokemonTypes.getType(move.type?.name ?? '');
+    final type = PokemonTypes.getType(move.type ?? '');
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0),
-      child: Container(
-        decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: kColorDivider)),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                move.name.toString().capitalize(),
-                style: PrimaryFont.medium(19),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed('$MoveDetailPage', arguments: move);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16.0),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(0, 16, 8, 16),
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: kColorDivider)),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  move.name.toString().capitalize(),
+                  style: PrimaryFont.medium(19),
+                ),
               ),
-            ),
-            PokemonTypeWidget(
-              type: type,
-            ),
-          ],
+              PokemonTypeWidget(
+                type: type,
+              ),
+            ],
+          ),
         ),
       ),
     );

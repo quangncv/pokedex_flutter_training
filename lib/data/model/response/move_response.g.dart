@@ -19,12 +19,14 @@ MoveResponse _$MoveResponseFromJson(Map<String, dynamic> json) => MoveResponse(
       type: json['type'] == null
           ? null
           : Type.fromJson(json['type'] as Map<String, dynamic>),
+      effectChange: json['effect_chance'] as int?,
     );
 
 Map<String, dynamic> _$MoveResponseToJson(MoveResponse instance) =>
     <String, dynamic>{
       'accuracy': instance.accuracy,
       'effect_entries': instance.effectEntries,
+      'effect_chance': instance.effectChange,
       'id': instance.id,
       'name': instance.name,
       'power': instance.power,

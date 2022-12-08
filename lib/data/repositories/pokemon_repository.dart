@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:pokedex_app/data/model/move.dart';
 import 'package:pokedex_app/data/model/pokemon.dart';
 import 'package:pokedex_app/data/model/response/pokemon_response.dart';
 import 'package:pokedex_app/data/model/response/species_response.dart';

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pokedex_app/data/model/move.dart';
 import 'package:pokedex_app/data/model/pokemon.dart';
 
 part 'pokemon_response.g.dart';

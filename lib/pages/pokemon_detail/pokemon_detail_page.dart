@@ -43,10 +43,6 @@ class _PokemonDetailPageState extends State<PokemonDetailPage> {
       pokemon = data;
       _isLoading = false;
     });
-
-    // setState(() {
-    //   _isLoading = false;
-    // });
   }
 
   @override

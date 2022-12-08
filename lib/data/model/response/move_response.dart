@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pokedex_app/data/model/move.dart';
 
 part 'move_response.g.dart';
 
@@ -8,6 +9,8 @@ class MoveResponse {
   int? accuracy;
   @JsonKey(name: 'effect_entries')
   List<EffectEntries>? effectEntries;
+  @JsonKey(name: 'effect_chance')
+  int? effectChange;
   @JsonKey(name: 'id')
   int? id;
   @JsonKey(name: 'name')
@@ -21,10 +24,34 @@ class MoveResponse {
   @JsonKey(name: 'type')
   Type? type;
 
-  MoveResponse({this.accuracy, this.effectEntries, this.id, this.name, this.power, this.pp, this.priority, this.type});
+  MoveResponse(
+      {this.accuracy,
+      this.effectEntries,
+      this.id,
+      this.name,
+      this.power,
+      this.pp,
+      this.priority,
+      this.type,
+      this.effectChange});
 
-  factory MoveResponse.fromJson(Map<String, dynamic> json) => _$MoveResponseFromJson(json);
-  Map<String, dynamic> toJson() =>_$MoveResponseToJson(this);
+  factory MoveResponse.fromJson(Map<String, dynamic> json) =>
+      _$MoveResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MoveResponseToJson(this);
+
+  Move toDisplayModel() {
+    return Move(
+      name ?? '',
+      0,
+      type?.name ?? 'normal',
+      accuracy: accuracy,
+      power: power,
+      pp: pp,
+      desc: effectEntries?.first.effect,
+      effectChange: effectChange,
+    );
+  }
 }
 
 @JsonSerializable()
@@ -37,7 +64,8 @@ class Type {
   Type({this.name, this.url});
 
   factory Type.fromJson(Map<String, dynamic> json) => _$TypeFromJson(json);
-  Map<String, dynamic> toJson() =>_$TypeToJson(this);
+
+  Map<String, dynamic> toJson() => _$TypeToJson(this);
 }
 
 @JsonSerializable()
@@ -49,6 +77,8 @@ class EffectEntries {
 
   EffectEntries({this.effect, this.shortEffect});
 
-  factory EffectEntries.fromJson(Map<String, dynamic> json) => _$EffectEntriesFromJson(json);
-  Map<String, dynamic> toJson() =>_$EffectEntriesToJson(this);
+  factory EffectEntries.fromJson(Map<String, dynamic> json) =>
+      _$EffectEntriesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EffectEntriesToJson(this);
 }

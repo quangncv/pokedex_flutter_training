@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pokedex_app/common/constants.dart';
 
 class PokemonTypeWidget extends StatelessWidget {
@@ -8,6 +9,9 @@ class PokemonTypeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(type.image);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+      child: SvgPicture.asset(type.image, width: 40, height: 40,),
+    );
   }
 }

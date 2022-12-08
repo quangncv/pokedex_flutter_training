@@ -1,16 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:pokedex_app/data/model/move.dart';
 import 'package:pokedex_app/data/model/pokemon.dart';
 import 'package:pokedex_app/pages/home/home_page.dart';
+import 'package:pokedex_app/pages/moves/move_detail/move_detail_page.dart';
 import 'package:pokedex_app/pages/pokemon_detail/pokemon_detail_page.dart';
 import 'package:pokedex_app/pages/splash/splash_page.dart';
-//
-// Map<String, WidgetBuilder> routes = {
-//   '$SplashPage': (context) => const SplashPage(),
-//   '$HomePage': (context) => const HomePage(),
-//   '$PokemonDetailPage': (context) => const PokemonDetailPage(),
-// };
+
 
 Route<dynamic> generatorRoute(RouteSettings settings) {
   final args = settings.arguments;
@@ -19,6 +16,7 @@ Route<dynamic> generatorRoute(RouteSettings settings) {
     '$SplashPage': (context) => const SplashPage(),
     '$HomePage': (context) => const HomePage(),
     '$PokemonDetailPage': (context) => PokemonDetailPage(pokemon: args as Pokemon),
+    '$MoveDetailPage': (context) => MoveDetailPage(move: args as Move,),
   };
 
   WidgetBuilder? builder = routes[settings.name];
