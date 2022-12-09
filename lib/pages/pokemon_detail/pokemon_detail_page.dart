@@ -1,11 +1,13 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_app/common/constants.dart';
 import 'package:pokedex_app/data/model/pokemon.dart';
 import 'package:pokedex_app/data/repositories/pokemon_repository.dart';
 import 'package:pokedex_app/di/injection.dart';
 import 'package:pokedex_app/extensions/string_ext.dart';
+import 'package:pokedex_app/pages/pokemon_detail/bloc/pokemon_detail_cubit.dart';
+import 'package:pokedex_app/pages/pokemon_detail/bloc/pokemon_detail_state.dart';
 import 'package:pokedex_app/pages/pokemon_detail/evolution/evolution_page.dart';
 import 'package:pokedex_app/pages/pokemon_detail/moves/moves_page.dart';
 import 'package:pokedex_app/pages/pokemon_detail/stats/stats_page.dart';
@@ -23,75 +25,95 @@ class PokemonDetailPage extends StatefulWidget {
 
 class _PokemonDetailPageState extends State<PokemonDetailPage> {
   final pokemonRepository = getIt.get<PokemonRepository>();
+  final pokemonDetailBloc = getIt.get<PokemonDetailCubit>();
   late Pokemon pokemon;
-
-  bool _isLoading = false;
 
   @override
   void initState() {
     pokemon = widget.pokemon;
     super.initState();
-    fetchInfo();
-  }
-
-  void fetchInfo() async {
-    setState(() {
-      _isLoading = true;
-    });
-    final data = await pokemonRepository.getInfoPokemon(pokemon);
-    setState(() {
-      pokemon = data;
-      _isLoading = false;
-    });
+    pokemonDetailBloc.getPokemon(pokemon);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration:
-            BoxDecoration(gradient: pokemon.mainType().bgGradient),
-        child: SafeArea(
-          child: (!_isLoading) ? CustomScrollView(
-            slivers: [
-              SliverPersistentHeader(
-                delegate: _BuildSliverAppBar(
-                  pokemon,
-                  expandedHeight: 200,
-                ),
-                pinned: true,
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 50),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(48),
-                      topRight: Radius.circular(48),
-                    ),
-                  ),
-                  child: _BuildInfo(pokemon: pokemon,),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  color: Colors.white,
-                  child: _BuildTabAttributes(pokemon: pokemon,),
-                ),
-              ),
-            ],
-          ) : const Center(child: CircularProgressIndicator(color: Colors.white,)),
+        decoration: BoxDecoration(gradient: pokemon.mainType().bgGradient),
+        child: BlocProvider(
+          create: (_) => pokemonDetailBloc,
+          child: BlocConsumer<PokemonDetailCubit, PokemonDetailState>(
+            builder: (context, state) {
+              return SafeArea(child: _buildPokemonDetail(state));
+            },
+            listener: (context, state){},
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildPokemonDetailLoading() {
+    return const Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+        ));
+  }
+
+  Widget _buildPokemonDetailLoaded() {
+    return CustomScrollView(
+      slivers: [
+        SliverPersistentHeader(
+          delegate: _BuildSliverAppBar(
+            pokemon,
+            expandedHeight: 200,
+          ),
+          pinned: true,
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            padding: const EdgeInsets.only(top: 50),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(48),
+                topRight: Radius.circular(48),
+              ),
+            ),
+            child: _BuildInfo(
+              pokemon: pokemon,
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            color: Colors.white,
+            child: _BuildTabAttributes(
+              pokemon: pokemon,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPokemonDetail(PokemonDetailState state) {
+    if (state is PokemonDetailLoading) {
+      return _buildPokemonDetailLoading();
+    } else if (state is PokemonDetailLoaded) {
+      pokemon = state.pokemon;
+      return _buildPokemonDetailLoaded();
+    } else {
+      return Container();
+    }
   }
 }
 
 class _BuildInfo extends StatelessWidget {
   const _BuildInfo({
-    Key? key, required this.pokemon,
+    Key? key,
+    required this.pokemon,
   }) : super(key: key);
 
   final Pokemon pokemon;
@@ -110,7 +132,9 @@ class _BuildInfo extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: types.map((e) => PokemonTagWidget(type: PokemonTypes.getType(e))).toList(),
+            children: types
+                .map((e) => PokemonTagWidget(type: PokemonTypes.getType(e)))
+                .toList(),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -129,7 +153,8 @@ class _BuildInfo extends StatelessWidget {
 }
 
 class _BuildTabAttributes extends StatefulWidget {
-  const _BuildTabAttributes({Key? key, required this.pokemon}) : super(key: key);
+  const _BuildTabAttributes({Key? key, required this.pokemon})
+      : super(key: key);
 
   final Pokemon pokemon;
 
@@ -189,9 +214,15 @@ class _BuildTabAttributesState extends State<_BuildTabAttributes>
           IndexedStack(
             index: _tabSelected,
             children: [
-              StatsPage(pokemon: widget.pokemon,),
-              EvolutionPage(evolutions: widget.pokemon.evolutions,),
-              MovesPage(moves: widget.pokemon.moves,),
+              StatsPage(
+                pokemon: widget.pokemon,
+              ),
+              EvolutionPage(
+                evolutions: widget.pokemon.evolutions,
+              ),
+              MovesPage(
+                moves: widget.pokemon.moves,
+              ),
             ],
           ),
         ],
@@ -238,7 +269,10 @@ class _BuildSliverAppBar extends SliverPersistentHeaderDelegate {
               child: SizedBox(
                 height: expandedHeight,
                 width: MediaQuery.of(context).size.width / 2,
-                child: Image.network('$pokemonImageUrl${pokemon.id}.png', fit: BoxFit.fitHeight,),
+                child: Image.network(
+                  '$pokemonImageUrl${pokemon.id}.png',
+                  fit: BoxFit.fitHeight,
+                ),
               ),
             ),
           ),
