@@ -1,0 +1,7 @@
+<svg id="Dark" xmlns="http://www.w3.org/2000/svg" width="110" height="30" viewBox="0 0 110 30">
+  <g id="Group_4" data-name="Group 4">
+    <rect id="Rectangle" width="110" height="30" rx="15" fill="#5f606d"/>
+    <text id="DARK-2" data-name="DARK" transform="translate(60 7)" fill="#fff" font-size="12" font-family="Avenir-Heavy, Avenir" font-weight="800"><tspan x="-16.776" y="12">DARK</tspan></text>
+    <path id="Oval_7" data-name="Oval 7" d="M7,14a7,7,0,1,1,7-7A7.008,7.008,0,0,1,7,14ZM7.1,1.75a5.481,5.481,0,0,0-.587.031A6.52,6.52,0,0,1,8.944,7a6.5,6.5,0,0,1-2.663,5.382A5.348,5.348,0,1,0,7.1,1.75Z" transform="translate(14 8)" fill="#fff"/>
+  </g>
+</svg>
