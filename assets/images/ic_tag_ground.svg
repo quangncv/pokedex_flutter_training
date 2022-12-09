@@ -1,0 +1,7 @@
+<svg id="Ground" xmlns="http://www.w3.org/2000/svg" width="110" height="30" viewBox="0 0 110 30">
+  <g id="Group_4" data-name="Group 4">
+    <rect id="Rectangle" width="110" height="30" rx="15" fill="#d78555"/>
+    <text id="GROUND-2" data-name="GROUND" transform="translate(60 7)" fill="#fff" font-size="12" font-family="Avenir-Heavy, Avenir" font-weight="800"><tspan x="-27.108" y="12">GROUND</tspan></text>
+    <path id="Path_6" data-name="Path 6" d="M.2,11a.2.2,0,0,1-.189-.272L2.748,3.417a.2.2,0,0,1,.188-.13H5.029a.2.2,0,0,1,.189.27L2.57,10.868A.2.2,0,0,1,2.381,11Zm3.171-.042H3.306a.044.044,0,0,1-.041-.059L7.074.134A.2.2,0,0,1,7.263,0h3.859a.2.2,0,0,1,.19.135l3.68,10.555a.2.2,0,0,1-.19.267H3.369Z" transform="translate(14 9)" fill="#fff"/>
+  </g>
+</svg>

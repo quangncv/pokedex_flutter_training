@@ -1,0 +1,7 @@
+<svg id="Normal" xmlns="http://www.w3.org/2000/svg" width="110" height="30" viewBox="0 0 110 30">
+  <g id="Group_4" data-name="Group 4">
+    <rect id="Rectangle" width="110" height="30" rx="15" fill="#9a9da1"/>
+    <text id="NORMAL-2" data-name="NORMAL" transform="translate(60 7)" fill="#fff" font-size="12" font-family="Avenir-Heavy, Avenir" font-weight="800"><tspan x="-26.556" y="12">NORMAL</tspan></text>
+    <path id="Oval_11" data-name="Oval 11" d="M7,14a7,7,0,1,1,7-7A7.008,7.008,0,0,1,7,14ZM7,3a4,4,0,1,0,4,4A4.005,4.005,0,0,0,7,3Z" transform="translate(14 8)" fill="#fff"/>
+  </g>
+</svg>
